@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import { HighlightText, VideoControlCustom } from "@/components";
-import { Box, Button, Menu, MenuItem } from "@mui/material";
-import videoURL from "@/assets/videos/video.mp4";
+import videoURL from '@/assets/videos/video.mp4';
+import { HighlightText, VideoControlCustom } from '@/components';
+import { Box, Button, Menu, MenuItem } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 
 interface IListData {
 	atTime: string;
@@ -10,18 +10,18 @@ interface IListData {
 
 const listData: IListData[] = [
 	{
-		atTime: "0,9s",
+		atTime: '0,9s',
 		content:
-			"Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit sequi provident deleniti excepturi eaque. Veniam libero voluptates laudantium minus in obcaecati odio ab reiciendis? Pariatur sint magni voluptas perspiciatis cumque beatae fugit fuga. Laborum labore incidunt veniam illo reprehenderit natus totam corrupti voluptatem ab harum. Quod repellat, esse quas iure neque porro magni ratione dolores. Sed illo sint explicabo eius perferendis perspiciatis ducimus. Enim, officiis et. Odio sapiente quibusdam itaque harum iusto, voluptatum possimus nesciunt, sed fugiat quos nam aliquid, dolorem repellat nostrum recusandae officia reprehenderit aperiam! Ipsa assumenda, provident ratione nemo debitis illo, rerum, maxime atque omnis alias facilis!",
+			'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit sequi provident deleniti excepturi eaque. Veniam libero voluptates laudantium minus in obcaecati odio ab reiciendis? Pariatur sint magni voluptas perspiciatis cumque beatae fugit fuga. Laborum labore incidunt veniam illo reprehenderit natus totam corrupti voluptatem ab harum. Quod repellat, esse quas iure neque porro magni ratione dolores. Sed illo sint explicabo eius perferendis perspiciatis ducimus. Enim, officiis et. Odio sapiente quibusdam itaque harum iusto, voluptatum possimus nesciunt, sed fugiat quos nam aliquid, dolorem repellat nostrum recusandae officia reprehenderit aperiam! Ipsa assumenda, provident ratione nemo debitis illo, rerum, maxime atque omnis alias facilis!',
 	},
 	{
-		atTime: "10s",
-		content: "Siêu nhân không được bỏ cuộc",
+		atTime: '10s',
+		content: 'Siêu nhân không được bỏ cuộc',
 	},
 
 	{
-		atTime: "13s",
-		content: "Siêu nhân không được bỏ cuộc sức mạnh của tình bạn sẽ mang lại chiến thắng",
+		atTime: '13s',
+		content: 'Siêu nhân không được bỏ cuộc sức mạnh của tình bạn sẽ mang lại chiến thắng',
 	},
 ];
 
@@ -29,8 +29,8 @@ const Home = () => {
 	const [textHighlight, setTextHighlight] = useState<any[]>([]);
 	const [selectionState, setSelectionState] = useState<any>();
 	const [paragraphs, setParagraphs] = useState<any[]>([]);
-	const [typeMenu, setTypeMenu] = useState<string>("SELECT");
-	const [correctText, setCorrectText] = useState<string>("");
+	const [typeMenu, setTypeMenu] = useState<string>('SELECT');
+	const [correctText, setCorrectText] = useState<string>('');
 	const [elementRemove, setElementRemove] = useState<any>();
 	const [open, setOpen] = useState<boolean>(false);
 	const elementRef = useRef<HTMLElement | null>(null);
@@ -47,49 +47,47 @@ const Home = () => {
 				setSelectionState({
 					index,
 					range,
-					// overRow: textHighlight.filter(
-					// 	(item: any) => item.index === index && item.rangeEnd > range.endOffset && item.rangeStart > range.startOffset
-					// ),
 					highlightValue: highlightValue.toString().trim(),
 				});
-
+				const temp = highlightValue.toString();
 				const selectedText = range.extractContents();
-				const span = document.createElement("span");
-				span.classList.add("bg-red-600", "text-blue-300", "select-none");
+				const span = document.createElement('span');
+				span.classList.add('bg-red-600', 'text-blue-300', 'select-none');
 				span.appendChild(selectedText);
 				range.insertNode(span);
-				span.setAttribute("data-value", `${highlightValue.toString().trim()}`);
-				span.addEventListener("click", (e) => {
-					setOpen(true);
-					elementRef.current = e.currentTarget as HTMLElement;
-					setTypeMenu("DELETE");
-					setElementRemove({
-						index,
-						element: e.target,
+				if (!highlightValue.toString().trim()) {
+					span.replaceWith(document.createTextNode(temp));
+					span.setAttribute('data-value', `${highlightValue.toString().trim()}`);
+					span.addEventListener('click', (e) => {
+						setOpen(true);
+						elementRef.current = e.currentTarget as HTMLElement;
+						setTypeMenu('DELETE');
+						setElementRemove({
+							index,
+							element: e.target,
+						});
 					});
-				});
+				} else {
+					const newTextHighlight = textHighlight.map((text, i) => {
+						if (i === index) {
+							return {
+								...text,
+								selected: [
+									...(text?.selected.filter((txt: string) => !highlightValue.toString().trim().includes(txt)) || []),
+									highlightValue.toString().trim(),
+								],
+							};
+						}
 
-				const newTextHighlight = textHighlight.map((text, i) => {
-					if (i === index) {
-						return {
-							...text,
-							// eslint-disable-next-line no-unsafe-optional-chaining
-							selected: [
-								// eslint-disable-next-line no-unsafe-optional-chaining
-								...text?.selected.filter((txt: string) => !highlightValue.toString().trim().includes(txt)),
-								highlightValue.toString().trim(),
-							],
-						};
-					}
+						return text;
+					});
+					setTextHighlight(newTextHighlight);
+					setSelectionState(null);
 
-					return text;
-				});
-				setTextHighlight(newTextHighlight);
-				setSelectionState(null);
-
-				setTypeMenu("SELECT");
-				elementRef.current = span as HTMLElement;
-				setOpen(true);
+					setTypeMenu('SELECT');
+					elementRef.current = span as HTMLElement;
+					setOpen(true);
+				}
 			}
 		}
 	};
@@ -137,26 +135,26 @@ const Home = () => {
 	const handleRemove = (dataRemove: any) => {
 		const newTextHighlight = textHighlight.map((text, index) => {
 			if (index === dataRemove.index) {
-				const childSpan = dataRemove.element.querySelectorAll("span");
+				const childSpan = dataRemove.element.querySelectorAll('span');
 				const valueRemove: string[] = [];
 				childSpan.forEach((span: any) => {
-					valueRemove.push(span.getAttribute("data-value"));
+					valueRemove.push(span.getAttribute('data-value'));
 					const textNode = document.createTextNode(span.textContent);
 					span.replaceWith(textNode);
 				});
 				let switchElement = dataRemove.element;
 				do {
 					const parentSpan = switchElement.parentElement;
-					if (parentSpan && parentSpan.tagName === "SPAN" && !!parentSpan.getAttribute("data-value")) {
+					if (parentSpan && parentSpan.tagName === 'SPAN' && !!parentSpan.getAttribute('data-value')) {
 						switchElement = parentSpan;
-						valueRemove.push(parentSpan.getAttribute("data-value"));
+						valueRemove.push(parentSpan.getAttribute('data-value'));
 						const textNode = document.createTextNode(parentSpan.textContent);
 						parentSpan.replaceWith(textNode);
 					}
-				} while (switchElement.parentElement?.tagName === "SPAN");
+				} while (switchElement.parentElement?.tagName === 'SPAN');
 				const textNode = document.createTextNode(dataRemove.element.textContent);
 				dataRemove.element.replaceWith(textNode);
-				valueRemove.push(dataRemove.element.getAttribute("data-value"));
+				valueRemove.push(dataRemove.element.getAttribute('data-value'));
 				return {
 					...text,
 					selected: text.selected.filter((txt: string) => valueRemove.includes(txt) === false),
@@ -171,7 +169,7 @@ const Home = () => {
 
 	const handleOnClose = () => {
 		setOpen(false);
-		setTypeMenu("SELECT");
+		setTypeMenu('SELECT');
 	};
 
 	const handleAddCorrect = () => {
@@ -183,13 +181,9 @@ const Home = () => {
 			listData[selectionState.index].content = paragraph.innerText;
 		}
 		handleOnClose();
-		setCorrectText("");
+		setCorrectText('');
 		setSelectionState(null);
 	};
-
-	useEffect(() => {
-		console.log("textHighlight", textHighlight);
-	}, [textHighlight]);
 
 	useEffect(() => {
 		if (listData && paragraphs.length === 0) {
@@ -199,7 +193,7 @@ const Home = () => {
 						...item,
 						index,
 						selected: [],
-					})
+					}),
 				);
 
 				delete newItem.content;
@@ -228,64 +222,64 @@ const Home = () => {
 				anchorEl={elementRef.current}
 				open={open}
 				anchorOrigin={{
-					vertical: "top",
-					horizontal: "center",
+					vertical: 'top',
+					horizontal: 'center',
 				}}
 				sx={{
-					marginTop: "-20px",
-					"& .MuiList-root": {
-						display: "flex",
-						gap: "5px",
+					marginTop: '-20px',
+					'& .MuiList-root': {
+						display: 'flex',
+						gap: '5px',
 					},
 
-					"& .MuiList-root  div": {
-						backgroundColor: "#fff",
-						width: "1px",
-						height: "inherit",
+					'& .MuiList-root  div': {
+						backgroundColor: '#fff',
+						width: '1px',
+						height: 'inherit',
 					},
 				}}
 				transformOrigin={{
-					vertical: "bottom",
-					horizontal: "center",
+					vertical: 'bottom',
+					horizontal: 'center',
 				}}
 				PaperProps={{
 					style: {
-						backgroundColor: "#4C667B",
+						backgroundColor: '#4C667B',
 					},
 				}}
 				onClose={() => handleOnClose()}
 			>
-				{typeMenu.length > 0 && typeMenu === "SELECT" ? (
+				{typeMenu.length > 0 && typeMenu === 'SELECT' ? (
 					<span className="flex gap-3">
-						<MenuItem onClick={() => setTypeMenu("CORRECT")}>Correct</MenuItem>
+						<MenuItem onClick={() => setTypeMenu('CORRECT')}>Correct</MenuItem>
 						<div></div>
 						<MenuItem onClick={() => handleAddBroll()}>Add B-roll</MenuItem>
 					</span>
-				) : typeMenu === "DELETE" ? (
+				) : typeMenu === 'DELETE' ? (
 					<MenuItem onClick={() => handleRemove(elementRemove)}>Remove</MenuItem>
-				) : typeMenu === "CORRECT" ? (
+				) : typeMenu === 'CORRECT' ? (
 					<MenuItem
 						sx={{
-							position: "relative",
+							position: 'relative',
 						}}
 					>
 						<Box
 							component="span"
 							sx={{
-								position: "absolute",
-								height: "20px",
-								width: "20px",
-								backgroundColor: "red",
-								borderRadius: "50%",
-								color: "white",
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "center",
-								padding: "5px",
-								overflow: "hidden",
-								cursor: "pointer",
-								top: "-2px",
-								right: "2px",
+								position: 'absolute',
+								height: '20px',
+								width: '20px',
+								backgroundColor: 'red',
+								borderRadius: '50%',
+								color: 'white',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								padding: '5px',
+								overflow: 'hidden',
+								cursor: 'pointer',
+								top: '-2px',
+								right: '2px',
 							}}
 							onClick={() => handleOnClose()}
 						>
