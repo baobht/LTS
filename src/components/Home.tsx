@@ -57,37 +57,37 @@ const Home = () => {
 				range.insertNode(span);
 				if (!highlightValue.toString().trim()) {
 					span.replaceWith(document.createTextNode(temp));
-					span.setAttribute('data-value', `${highlightValue.toString().trim()}`);
-					span.addEventListener('click', (e) => {
-						setOpen(true);
-						elementRef.current = e.currentTarget as HTMLElement;
-						setTypeMenu('DELETE');
-						setElementRemove({
-							index,
-							element: e.target,
-						});
-					});
-				} else {
-					const newTextHighlight = textHighlight.map((text, i) => {
-						if (i === index) {
-							return {
-								...text,
-								selected: [
-									...(text?.selected.filter((txt: string) => !highlightValue.toString().trim().includes(txt)) || []),
-									highlightValue.toString().trim(),
-								],
-							};
-						}
-
-						return text;
-					});
-					setTextHighlight(newTextHighlight);
-					setSelectionState(null);
-
-					setTypeMenu('SELECT');
-					elementRef.current = span as HTMLElement;
-					setOpen(true);
+					return;
 				}
+				span.setAttribute('data-value', `${highlightValue.toString().trim()}`);
+				span.addEventListener('click', (e) => {
+					setOpen(true);
+					elementRef.current = e.currentTarget as HTMLElement;
+					setTypeMenu('DELETE');
+					setElementRemove({
+						index,
+						element: e.target,
+					});
+				});
+				const newTextHighlight = textHighlight.map((text, i) => {
+					if (i === index) {
+						return {
+							...text,
+							selected: [
+								...(text?.selected.filter((txt: string) => !highlightValue.toString().trim().includes(txt)) || []),
+								highlightValue.toString().trim(),
+							],
+						};
+					}
+
+					return text;
+				});
+				setTextHighlight(newTextHighlight);
+				setSelectionState(null);
+
+				setTypeMenu('SELECT');
+				elementRef.current = span as HTMLElement;
+				setOpen(true);
 			}
 		}
 	};
