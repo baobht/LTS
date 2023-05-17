@@ -15,7 +15,9 @@ const HighlightText = (props: IHighlightText) => {
 
 	return (
 		<div className="bg-white rounded-md p-4 text-black">
-			<p onMouseUp={(e) => (handleHighlightText ? handleHighlightText(e, index) : null)}>{data.content}</p>
+			<p id={`paragraph_${index}`} onMouseUp={(e) => (handleHighlightText ? handleHighlightText(e, index) : null)}>
+				{data.content}
+			</p>
 		</div>
 	);
 };
