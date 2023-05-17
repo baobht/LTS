@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, ReactNode } from "react";
-import { HighlightText } from "@/components";
-import { Box, Button, Menu, MenuItem, TextField } from "@mui/material";
+import { useState, useEffect, useRef } from "react";
+import { HighlightText, VideoControlCustom } from "@/components";
+import { Box, Button, Menu, MenuItem } from "@mui/material";
+import videoURL from "@/assets/videos/video.mp4";
 
 interface IListData {
 	atTime: string;
@@ -27,6 +28,7 @@ const listData: IListData[] = [
 const Home = () => {
 	const [textHighlight, setTextHighlight] = useState<any[]>([]);
 	const [selectionState, setSelectionState] = useState<any>();
+	const [paragraphs, setParagraphs] = useState<any[]>([]);
 	const [typeMenu, setTypeMenu] = useState<string>("SELECT");
 	const [correctText, setCorrectText] = useState<string>("");
 	const [elementRemove, setElementRemove] = useState<any>();
@@ -51,49 +53,83 @@ const Home = () => {
 					highlightValue: highlightValue.toString().trim(),
 				});
 
+				const selectedText = range.extractContents();
+				const span = document.createElement("span");
+				span.classList.add("bg-red-600", "text-blue-300", "select-none");
+				span.appendChild(selectedText);
+				range.insertNode(span);
+				span.setAttribute("data-value", `${highlightValue.toString().trim()}`);
+				span.addEventListener("click", (e) => {
+					setOpen(true);
+					elementRef.current = e.currentTarget as HTMLElement;
+					setTypeMenu("DELETE");
+					setElementRemove({
+						index,
+						element: e.target,
+					});
+				});
+
+				const newTextHighlight = textHighlight.map((text, i) => {
+					if (i === index) {
+						return {
+							...text,
+							// eslint-disable-next-line no-unsafe-optional-chaining
+							selected: [
+								// eslint-disable-next-line no-unsafe-optional-chaining
+								...text?.selected.filter((txt: string) => !highlightValue.toString().trim().includes(txt)),
+								highlightValue.toString().trim(),
+							],
+						};
+					}
+
+					return text;
+				});
+				setTextHighlight(newTextHighlight);
+				setSelectionState(null);
+
 				setTypeMenu("SELECT");
-				elementRef.current = e.currentTarget as HTMLElement;
+				elementRef.current = span as HTMLElement;
 				setOpen(true);
 			}
 		}
 	};
 
 	const handleAddBroll = () => {
-		const selectedText = selectionState.range.extractContents();
-		const span = document.createElement("span");
-		span.classList.add("bg-red-600", "text-blue-300", "select-none");
-		span.appendChild(selectedText);
+		// const selectedText = selectionState.range.extractContents();
+		// const span = document.createElement("span");
+		// span.classList.add("bg-red-600", "text-blue-300", "select-none");
+		// span.appendChild(selectedText);
 
-		selectionState.range.insertNode(span);
-		span.setAttribute("data-value", `${selectionState.highlightValue.toString().trim()}`);
-		span.addEventListener("click", (e) => {
-			setOpen(true);
-			elementRef.current = span;
-			setTypeMenu("DELETE");
-			setElementRemove({
-				index: selectionState.index,
-				element: e.target,
-			});
-		});
+		// selectionState.range.insertNode(span);
+		// span.setAttribute("data-value", `${selectionState.highlightValue.toString().trim()}`);
+		// span.addEventListener("click", (e) => {
+		// 	setOpen(true);
+		// 	elementRef.current = e.currentTarget as HTMLElement;
+		// 	setTypeMenu("DELETE");
+		// 	setElementRemove({
+		// 		index: selectionState.index,
+		// 		element: e.target,
+		// 	});
+		// });
 
-		const newTextHighlight = textHighlight.map((text, i) => {
-			if (i === selectionState.index) {
-				return {
-					...text,
-					rangeStart: selectionState.range.startOffset,
-					rangeStartEnd: selectionState.range.endOffset,
-					// eslint-disable-next-line no-unsafe-optional-chaining
-					selected: [
-						// eslint-disable-next-line no-unsafe-optional-chaining
-						...text?.selected.filter((txt: string) => !selectionState.highlightValue.toString().trim().includes(txt)),
-						selectionState.highlightValue.toString().trim(),
-					],
-				};
-			}
+		// const newTextHighlight = textHighlight.map((text, i) => {
+		// 	if (i === selectionState.index) {
+		// 		return {
+		// 			...text,
+		// 			rangeStart: selectionState.range.startOffset,
+		// 			rangeStartEnd: selectionState.range.endOffset,
+		// 			// eslint-disable-next-line no-unsafe-optional-chaining
+		// 			selected: [
+		// 				// eslint-disable-next-line no-unsafe-optional-chaining
+		// 				...text?.selected.filter((txt: string) => !selectionState.highlightValue.toString().trim().includes(txt)),
+		// 				selectionState.highlightValue.toString().trim(),
+		// 			],
+		// 		};
+		// 	}
 
-			return text;
-		});
-		setTextHighlight(newTextHighlight);
+		// 	return text;
+		// });
+		// setTextHighlight(newTextHighlight);
 		setOpen(false);
 		setSelectionState(null);
 	};
@@ -142,6 +178,10 @@ const Home = () => {
 		selectionState.range.deleteContents();
 		const textNode = document.createTextNode(correctText);
 		selectionState.range.insertNode(textNode);
+		const paragraph = document.getElementById(`paragraph_${selectionState.index}`);
+		if (paragraph) {
+			listData[selectionState.index].content = paragraph.innerText;
+		}
 		handleOnClose();
 		setCorrectText("");
 		setSelectionState(null);
@@ -152,25 +192,28 @@ const Home = () => {
 	}, [textHighlight]);
 
 	useEffect(() => {
-		const newListText = listData.map((item, index) => {
-			const newItem = JSON.parse(
-				JSON.stringify({
-					...item,
-					index,
-					selected: [],
-				})
-			);
+		if (listData && paragraphs.length === 0) {
+			const newListText = listData.map((item, index) => {
+				const newItem = JSON.parse(
+					JSON.stringify({
+						...item,
+						index,
+						selected: [],
+					})
+				);
 
-			delete newItem.content;
-			return newItem;
-		});
-		setTextHighlight(newListText);
+				delete newItem.content;
+				return newItem;
+			});
+			setTextHighlight(newListText);
+			setParagraphs(JSON.parse(JSON.stringify(listData)));
+		}
 	}, [listData]);
 
 	return (
 		<div className="p-4 flex flex-col gap-4">
-			{listData.length > 0 &&
-				listData.map((item, index) => (
+			{paragraphs.length > 0 &&
+				paragraphs.map((item, index) => (
 					<HighlightText
 						handleHighlightText={handleHighlightText}
 						data={item}
@@ -178,6 +221,8 @@ const Home = () => {
 						key={`${index}_${item.atTime}`}
 					/>
 				))}
+
+			<VideoControlCustom src={videoURL} />
 
 			<Menu
 				anchorEl={elementRef.current}
