@@ -1,5 +1,6 @@
 import videoURL from '@/assets/videos/video.mp4';
 import { HighlightText, VideoControlCustom } from '@/components';
+import { getParentElement } from '@/utils/commonFunctions';
 import { Box, Button, Menu, MenuItem } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
@@ -135,26 +136,27 @@ const Home = () => {
 	const handleRemove = (dataRemove: any) => {
 		const newTextHighlight = textHighlight.map((text, index) => {
 			if (index === dataRemove.index) {
-				const childSpan = dataRemove.element.querySelectorAll('span');
+				const parentElement = getParentElement(dataRemove.element);
+				const childSpan = parentElement.querySelectorAll('span');
 				const valueRemove: string[] = [];
-				childSpan.forEach((span: any) => {
-					valueRemove.push(span.getAttribute('data-value'));
-					const textNode = document.createTextNode(span.textContent);
+				childSpan.forEach((span: HTMLElement) => {
+					valueRemove.push(span.getAttribute('data-value') || '');
+					const textNode = document.createTextNode(span.textContent || '');
 					span.replaceWith(textNode);
 				});
-				let switchElement = dataRemove.element;
+				let switchElement = parentElement;
 				do {
 					const parentSpan = switchElement.parentElement;
 					if (parentSpan && parentSpan.tagName === 'SPAN' && !!parentSpan.getAttribute('data-value')) {
 						switchElement = parentSpan;
-						valueRemove.push(parentSpan.getAttribute('data-value'));
-						const textNode = document.createTextNode(parentSpan.textContent);
+						valueRemove.push(parentSpan?.getAttribute('data-value') || '');
+						const textNode = document.createTextNode(parentSpan?.textContent || '');
 						parentSpan.replaceWith(textNode);
 					}
 				} while (switchElement.parentElement?.tagName === 'SPAN');
-				const textNode = document.createTextNode(dataRemove.element.textContent);
-				dataRemove.element.replaceWith(textNode);
-				valueRemove.push(dataRemove.element.getAttribute('data-value'));
+				const textNode = document.createTextNode(parentElement.textContent || '');
+				parentElement.replaceWith(textNode);
+				valueRemove.push(parentElement.getAttribute('data-value') || '');
 				return {
 					...text,
 					selected: text.selected.filter((txt: string) => valueRemove.includes(txt) === false),
