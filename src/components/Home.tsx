@@ -1,8 +1,8 @@
 import videoURL from '@/assets/videos/video.mp4';
-import { HighlightText, VideoControlCustom } from '@/components';
+import { HighlightText, ImageEditor, VideoControlCustom } from '@/components';
 import { getParentElement } from '@/utils/commonFunctions';
 import { Box, Button, Menu, MenuItem } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, ChangeEvent } from 'react';
 
 interface IListData {
 	atTime: string;
@@ -220,6 +220,7 @@ const Home = () => {
 
 			<VideoControlCustom src={videoURL} />
 
+			<ImageEditor />
 			<Menu
 				anchorEl={elementRef.current}
 				open={open}
