@@ -1,13 +1,13 @@
-import { convertTimeVideo } from "@/utils/commonFunctions";
-import { useEffect, useRef, useState } from "react";
-import { BsFillPlayFill, BsPauseFill, BsVolumeUp, BsVolumeMute } from "react-icons/bs";
+import { convertTimeVideo } from '@/utils/commonFunctions';
+import { useEffect, useRef, useState } from 'react';
+import { BsFillPlayFill, BsPauseFill, BsVolumeUp, BsVolumeMute } from 'react-icons/bs';
 
 interface IVideoControl {
 	src: string;
 }
 
 const VideoControlCustom = (props: IVideoControl) => {
-	const { src = "" } = props,
+	const { src = '' } = props,
 		videoRef = useRef<HTMLVideoElement | null>(null),
 		[isPlay, setIsPlay] = useState<boolean>(false),
 		[videoState, setVideoState] = useState<any>({ currentPercent: 0, volume: 0.6 }),
@@ -84,7 +84,7 @@ const VideoControlCustom = (props: IVideoControl) => {
 					{isPlay ? (
 						<button
 							type="button"
-							className="flex h-12 w-12 bg-blue-300 rounded-full items-center justify-center p-2 border-none outline-none"
+							className="flex h-12 w-12 bg-primary rounded-full items-center justify-center p-2 border-none outline-none"
 							onClick={pause}
 						>
 							<BsPauseFill size={20} />
@@ -92,7 +92,7 @@ const VideoControlCustom = (props: IVideoControl) => {
 					) : (
 						<button
 							type="button"
-							className="flex h-12 w-12 bg-blue-300 rounded-full items-center justify-center p-2 border-none outline-none"
+							className="flex h-12 w-12 bg-primary rounded-full items-center justify-center p-2 border-none outline-none"
 							onClick={play}
 						>
 							<BsFillPlayFill size={20} />
@@ -134,7 +134,8 @@ const VideoControlCustom = (props: IVideoControl) => {
 					</div>
 
 					<p className="video_time absolute left-24">
-						<span className="text-2xl font-bold">{videoState.currentTime || "00:00"}</span> / {videoState.duration || "00:00"}
+						<span className="text-2xl font-bold">{videoState.currentTime || '00:00'}</span> /{' '}
+						{videoState.duration || '00:00'}
 					</p>
 				</div>
 			</div>

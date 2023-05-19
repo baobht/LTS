@@ -2,7 +2,7 @@
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
-
+	--color-primary: #4285f4;
 	color-scheme: light dark;
 	color: rgba(255, 255, 255, 0.87);
 	background-color: #242424;
@@ -69,7 +69,7 @@ button:focus-visible {
 }
 
 input[type='range'] {
-	background-image: linear-gradient(#4f00cd, #4f00cd);
+	background-image: linear-gradient(var(--color-primary), var(--color-primary));
 	background-repeat: no-repeat;
 }
 
@@ -78,7 +78,7 @@ input[type='range']::-webkit-slider-thumb {
 	border-radius: 0 25px 25px 0;
 	width: 10px;
 	height: 8px;
-	background-color: #4f00cd;
+	background-color: var(--color-primary);
 }
 
 .volume-container > input[type='range'] {
@@ -92,6 +92,45 @@ input[type='range']::-webkit-slider-thumb {
 .volume-container:hover ~ p.video_time {
 	position: relative;
 	left: 0;
+}
+
+.ReactCrop__drag-handle::after {
+	background: var(--color-primary);
+}
+
+.ReactCrop__drag-handle.ord-n::after,
+.ReactCrop__drag-handle.ord-s::after {
+	width: 20px;
+	transform: translateX(-50%);
+}
+
+.ReactCrop__drag-handle.ord-w::after,
+.ReactCrop__drag-handle.ord-e::after {
+	height: 20px;
+	transform: translateY(-50%);
+}
+.ReactCrop__drag-handle.ord-nw::after {
+	clip-path: polygon(100% 40%, 40% 40%, 40% 100%, 0 100%, 0 0, 100% 0);
+	width: 20px;
+	height: 20px;
+}
+
+.ReactCrop__drag-handle.ord-sw::after {
+	clip-path: polygon(40% 60%, 100% 60%, 100% 100%, 0 100%, 0 0, 40% 0);
+	width: 20px;
+	height: 20px;
+}
+
+.ReactCrop__drag-handle.ord-ne::after {
+	clip-path: polygon(100% 0, 100% 100%, 60% 100%, 60% 40%, 0 40%, 0 0);
+	width: 20px;
+	height: 20px;
+}
+
+.ReactCrop__drag-handle.ord-se::after {
+	clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 60%, 60% 60%, 60% 0);
+	width: 20px;
+	height: 20px;
 }
 
 @tailwind base;
