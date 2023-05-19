@@ -38,6 +38,7 @@ const ImageEditor = () => {
 	const [crop, setCrop] = useState<Crop>();
 	const [aspect, setAspect] = useState<number | undefined>(16 / 9);
 	const [croppedAreaPixels, setCroppedAreaPixels] = useState(0);
+	const testImage = useRef<HTMLImageElement | null>(null);
 
 	const setCroppedImageFor = (
 		id: number,
@@ -87,6 +88,13 @@ const ImageEditor = () => {
 	}, [imageRef.current]);
 
 	useEffect(() => {
+		if (testImage.current) {
+			testImage.current.width = testImage.current.naturalWidth / testImage.current.width;
+			testImage.current.height = testImage.current.naturalHeight / testImage.current.height;
+		}
+	}, [testImage.current]);
+
+	useEffect(() => {
 		if (selectedImage) document.addEventListener('keydown', onCrop);
 
 		return () => {
@@ -114,6 +122,7 @@ const ImageEditor = () => {
 				</ReactCrop>
 			)}
 			<div className="text-center">
+				<img ref={testImage} src={images[0].imageURL} alt="" />
 				{images.length > 0 &&
 					images.map((image, index) => (
 						<img
