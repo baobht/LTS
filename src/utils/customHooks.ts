@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+/* eslint-disable prefer-spread */
+import { useEffect, useRef, useState,DependencyList } from "react";
 
 
-const useDebounce = (value: string, delay: number)=>{
+function useDebounce (value: string, delay: number){
     const [debounceValue, setDebounceValue] = useState<string>(value),
     timerId = useRef<NodeJS.Timeout | null>(null);
 
@@ -15,8 +16,19 @@ const useDebounce = (value: string, delay: number)=>{
     },[value]);
 
     return debounceValue;
-};
+}
+
+function useDebounceEffect(fnc:()=> void, delay: number, deps: any){
+    const timerId = useRef<NodeJS.Timeout | null>(null);
+    useEffect(()=>{
+        timerId.current = setTimeout(()=>fnc.apply(undefined, deps), delay);
+
+        return ()=>{
+            if(timerId.current) clearTimeout(timerId.current);
+        }
+    },[deps])
+}
 
 
 
-export {useDebounce};
+export {useDebounce,useDebounceEffect};

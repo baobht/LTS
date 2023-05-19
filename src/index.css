@@ -68,12 +68,12 @@ button:focus-visible {
 	}
 }
 
-input[type="range"] {
+input[type='range'] {
 	background-image: linear-gradient(#4f00cd, #4f00cd);
 	background-repeat: no-repeat;
 }
 
-input[type="range"]::-webkit-slider-thumb {
+input[type='range']::-webkit-slider-thumb {
 	appearance: none !important;
 	border-radius: 0 25px 25px 0;
 	width: 10px;
@@ -81,11 +81,11 @@ input[type="range"]::-webkit-slider-thumb {
 	background-color: #4f00cd;
 }
 
-.volume-container > input[type="range"] {
+.volume-container > input[type='range'] {
 	clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
 }
 
-.volume-container:hover > input[type="range"] {
+.volume-container:hover > input[type='range'] {
 	clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
 
