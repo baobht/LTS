@@ -74,7 +74,7 @@ const Home = () => {
 							...text,
 							selected: [
 								...(text?.selected.filter((txt: string) => !highlightValue.toString().trim().includes(txt)) || []),
-								highlightValue.toString().trim() ? highlightValue.toString().trim() : temp.trim(),
+								highlightValue.toString().trim() || temp.trim(),
 							],
 						};
 					}
