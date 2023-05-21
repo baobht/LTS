@@ -2,7 +2,7 @@ import videoURL from '@/assets/videos/video.mp4';
 import { HighlightText, ImageEditor, VideoControlCustom } from '@/components';
 import { getParentElement } from '@/utils/commonFunctions';
 import { Box, Button, Menu, MenuItem } from '@mui/material';
-import { useEffect, useRef, useState, ChangeEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface IListData {
 	atTime: string;
@@ -35,14 +35,10 @@ const Home = () => {
 	const [elementRemove, setElementRemove] = useState<any>();
 	const [open, setOpen] = useState<boolean>(false);
 	const elementRef = useRef<HTMLElement | null>(null);
-	const handleHighlightText = (e: Event, index: number): void => {
+
+	const handleHighlightText = async (e: Event, index: number): Promise<void> => {
 		const highlightValue = window.getSelection();
 		if (highlightValue && highlightValue.rangeCount > 0 && highlightValue.toString().trim().length > 0) {
-			if (textHighlight[index]?.selected.some((value: string) => value === highlightValue.toString().trim())) {
-				setOpen(true);
-				return;
-			}
-
 			if (listData[index]?.content.includes(highlightValue.toString().trim())) {
 				const range = highlightValue.getRangeAt(0);
 				setSelectionState({
@@ -56,10 +52,12 @@ const Home = () => {
 				span.classList.add('bg-red-600', 'text-blue-300', 'select-none');
 				span.appendChild(selectedText);
 				range.insertNode(span);
-				if (!highlightValue.toString().trim()) {
-					span.replaceWith(document.createTextNode(temp));
-					return;
-				}
+				// console.log('///####', highlightValue);
+				// const containerNode = e.target;
+				// if (!highlightValue.toString() && containerNode.contains(range.commonAncestorContainer)) {
+				// 	span.replaceWith(document.createTextNode(temp));
+				// 	return;
+				// }
 				span.setAttribute('data-value', `${highlightValue.toString().trim()}`);
 				span.addEventListener('click', (e) => {
 					setOpen(true);
@@ -76,7 +74,7 @@ const Home = () => {
 							...text,
 							selected: [
 								...(text?.selected.filter((txt: string) => !highlightValue.toString().trim().includes(txt)) || []),
-								highlightValue.toString().trim(),
+								highlightValue.toString().trim() ? highlightValue.toString().trim() : temp.trim(),
 							],
 						};
 					}
@@ -144,16 +142,6 @@ const Home = () => {
 					const textNode = document.createTextNode(span.textContent || '');
 					span.replaceWith(textNode);
 				});
-				let switchElement = parentElement;
-				do {
-					const parentSpan = switchElement.parentElement;
-					if (parentSpan && parentSpan.tagName === 'SPAN' && !!parentSpan.getAttribute('data-value')) {
-						switchElement = parentSpan;
-						valueRemove.push(parentSpan?.getAttribute('data-value') || '');
-						const textNode = document.createTextNode(parentSpan?.textContent || '');
-						parentSpan.replaceWith(textNode);
-					}
-				} while (switchElement.parentElement?.tagName === 'SPAN');
 				const textNode = document.createTextNode(parentElement.textContent || '');
 				parentElement.replaceWith(textNode);
 				valueRemove.push(parentElement.getAttribute('data-value') || '');
@@ -205,6 +193,10 @@ const Home = () => {
 			setParagraphs(JSON.parse(JSON.stringify(listData)));
 		}
 	}, [listData]);
+
+	useEffect(() => {
+		console.log('text highlight', textHighlight[0]?.selected);
+	}, [textHighlight]);
 
 	return (
 		<div className="p-4 flex flex-col gap-4">
