@@ -1,6 +1,7 @@
 import videoURL from '@/assets/videos/video.mp4';
 import { HighlightText, ImageEditor, VideoControlCustom } from '@/components';
 import { getParentElement } from '@/utils/commonFunctions';
+import { useMediaQuery } from '@/utils/customHooks';
 import { Box, Button, Menu, MenuItem } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
@@ -27,6 +28,7 @@ const listData: IListData[] = [
 ];
 
 const Home = () => {
+	const isMobile = useMediaQuery(500);
 	const [textHighlight, setTextHighlight] = useState<any[]>([]);
 	const [selectionState, setSelectionState] = useState<any>();
 	const [paragraphs, setParagraphs] = useState<any[]>([]);
