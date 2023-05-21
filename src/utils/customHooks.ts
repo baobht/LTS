@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prefer-spread */
 import { useEffect, useRef, useState,DependencyList } from "react";
 
@@ -45,6 +46,16 @@ function useMediaQuery(maxWidth:number): boolean{
     return isMobile;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function usePrevState (value: any): any{
+	const ref = useRef(value);
+	useEffect(()=>{
+		ref.current = value;
+	},[value]);
+
+	return ref.current;
+}
 
 
-export {useDebounce,useDebounceEffect, useMediaQuery};
+
+export {useDebounce,useDebounceEffect, useMediaQuery, usePrevState};
