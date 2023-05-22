@@ -1,7 +1,7 @@
 import videoURL from '@/assets/videos/video.mp4';
 import { HighlightText, ImageEditor, VideoControlCustom } from '@/components';
 import { getParentElement } from '@/utils/commonFunctions';
-import { useMediaQuery } from '@/utils/customHooks';
+import { useMediaQuery, useTextSelection } from '@/utils/customHooks';
 import { Box, Button, Menu, MenuItem } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
@@ -37,48 +37,42 @@ const Home = () => {
 	const [elementRemove, setElementRemove] = useState<any>();
 	const [open, setOpen] = useState<boolean>(false);
 	const elementRef = useRef<HTMLElement | null>(null);
+	const { selectionText, isSelecting, range } = useTextSelection();
+	const newSpanElementRef = useRef<HTMLSpanElement[]>([]);
 
-	const handleHighlightText = async (e: Event, index: number): Promise<void> => {
-		const highlightValue = window.getSelection();
-		if (highlightValue && highlightValue.rangeCount > 0 && highlightValue.toString().trim().length > 0) {
-			if (listData[index]?.content.includes(highlightValue.toString().trim())) {
-				const range = highlightValue.getRangeAt(0);
-				setSelectionState({
-					index,
-					range,
-					highlightValue: highlightValue.toString().trim(),
-				});
-				const temp = highlightValue.toString();
-				const selectedText = range.extractContents();
-				const span = document.createElement('span');
-				span.classList.add('bg-red-600', 'text-blue-300', 'select-none');
-				span.appendChild(selectedText);
-				range.insertNode(span);
-				// console.log('///####', highlightValue);
-				// const containerNode = e.target;
-				// if (!highlightValue.toString() && containerNode.contains(range.commonAncestorContainer)) {
-				// 	span.replaceWith(document.createTextNode(temp));
-				// 	return;
-				// }
-				span.setAttribute('data-value', `${highlightValue.toString().trim()}`);
-				span.addEventListener('click', (e) => {
-					setOpen(true);
-					elementRef.current = e.currentTarget as HTMLElement;
-					setTypeMenu('DELETE');
-					setElementRemove({
-						index,
-						element: e.target,
-					});
-				});
+	useEffect(() => {
+		const handleNewSpanClick = (event: any, index: number) => {
+			elementRef.current = event.currentTarget as HTMLElement;
+			setTypeMenu('DELETE');
+			setElementRemove({
+				index,
+				element: event.target,
+			});
+			setOpen(true);
+		};
+		const handleHighlightText = (selectionText: string, range: Range) => {
+			const index = listData.findIndex((data) => data?.content.includes(selectionText));
+			console.log(index);
+			if (index !== -1) {
+				const temp = selectionText;
+				const extractContents = range.extractContents();
+				const newSpanElement = document.createElement('span');
+				newSpanElement.classList.add('bg-red-600', 'text-blue-300', 'select-none');
+				newSpanElement.setAttribute('data-selection', selectionText);
+				newSpanElement.addEventListener('click', (e) => handleNewSpanClick(e, index));
+				newSpanElement.appendChild(extractContents);
+				range.insertNode(newSpanElement);
+				newSpanElementRef.current.push(newSpanElement);
+
 				const newTextHighlight = textHighlight.map((text, i) => {
 					if (i === index) {
+						console.log('1');
 						return {
 							...text,
 							selected: [
-								...(text?.selected.filter(
-									(txt: string) => !highlightValue.toString().trim().includes(txt) || temp.trim().includes(txt),
-								) || []),
-								highlightValue.toString().trim() || temp.trim(),
+								...(text?.selected.filter((txt: string) => !selectionText.includes(txt) || temp.trim().includes(txt)) ||
+									[]),
+								selectionText || temp.trim(),
 							],
 						};
 					}
@@ -86,14 +80,72 @@ const Home = () => {
 					return text;
 				});
 				setTextHighlight(newTextHighlight);
-				setSelectionState(null);
-
-				setTypeMenu('SELECT');
-				elementRef.current = span as HTMLElement;
-				setOpen(true);
 			}
+		};
+		if (!isSelecting && selectionText && range) {
+			handleHighlightText(selectionText, range);
 		}
-	};
+		return () => {
+			newSpanElementRef.current.forEach((span) => span.removeEventListener('click', handleNewSpanClick));
+		};
+	}, [selectionText, isSelecting, range]);
+
+	// const handleHighlightText = async (e: Event, index: number): Promise<void> => {
+	// 	const highlightValue = window.getSelection();
+	// 	if (highlightValue && highlightValue.rangeCount > 0 && highlightValue.toString().trim().length > 0) {
+	// 		if (listData[index]?.content.includes(highlightValue.toString().trim())) {
+	// 			const range = highlightValue.getRangeAt(0);
+	// 			setSelectionState({
+	// 				index,
+	// 				range,
+	// 				highlightValue: highlightValue.toString().trim(),
+	// 			});
+	// 			const temp = highlightValue.toString();
+	// 			const selectedText = range.extractContents();
+	// 			const span = document.createElement('span');
+	// 			span.classList.add('bg-red-600', 'text-blue-300', 'select-none');
+	// 			span.appendChild(selectedText);
+	// 			range.insertNode(span);
+	// 			// console.log('///####', highlightValue);
+	// 			// const containerNode = e.target;
+	// 			// if (!highlightValue.toString() && containerNode.contains(range.commonAncestorContainer)) {
+	// 			// 	span.replaceWith(document.createTextNode(temp));
+	// 			// 	return;
+	// 			// }
+	// 			span.setAttribute('data-value', `${highlightValue.toString().trim()}`);
+	// 			span.addEventListener('click', (e) => {
+	// 				setOpen(true);
+	// 				elementRef.current = e.currentTarget as HTMLElement;
+	// 				setTypeMenu('DELETE');
+	// 				setElementRemove({
+	// 					index,
+	// 					element: e.target,
+	// 				});
+	// 			});
+	// 			const newTextHighlight = textHighlight.map((text, i) => {
+	// 				if (i === index) {
+	// 					return {
+	// 						...text,
+	// 						selected: [
+	// 							...(text?.selected.filter(
+	// 								(txt: string) => !highlightValue.toString().trim().includes(txt) || temp.trim().includes(txt),
+	// 							) || []),
+	// 							highlightValue.toString().trim() || temp.trim(),
+	// 						],
+	// 					};
+	// 				}
+
+	// 				return text;
+	// 			});
+	// 			setTextHighlight(newTextHighlight);
+	// 			setSelectionState(null);
+
+	// 			setTypeMenu('SELECT');
+	// 			elementRef.current = span as HTMLElement;
+	// 			setOpen(true);
+	// 		}
+	// 	}
+	// };
 
 	const handleAddBroll = () => {
 		// const selectedText = selectionState.range.extractContents();
@@ -207,7 +259,7 @@ const Home = () => {
 			{paragraphs.length > 0 &&
 				paragraphs.map((item, index) => (
 					<HighlightText
-						handleHighlightText={handleHighlightText}
+						// handleHighlightText={handleHighlightText}
 						data={item}
 						index={index}
 						key={`${index}_${item.atTime}`}

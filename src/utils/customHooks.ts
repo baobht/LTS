@@ -27,7 +27,7 @@ function useDebounceEffect(fnc:()=> void, delay: number, deps: any){
         return ()=>{
             if(timerId.current) clearTimeout(timerId.current);
         }
-    },[deps])
+    },[...deps])
 }
 
 function useMediaQuery(maxWidth:number): boolean{
@@ -56,6 +56,45 @@ function usePrevState (value: any): any{
 	return ref.current;
 }
 
+function useTextSelection (){
+    const [selectionText, setSelectionText] = useState('');
+    const [range, setRange] = useState<Range | null>(null);
+    const [isSelecting, setIsSelecting] = useState<boolean>(false);
+
+    useEffect(()=>{
+        const handleGetSelection = ()=>{
+            const selection = window.getSelection();
+            
+            if(selection && selection.toString().trim()){
+                setSelectionText(JSON.parse(JSON.stringify(selection.toString().trim())));
+                setRange(selection.getRangeAt(0));
+            }else{
+                setSelectionText('');
+                setRange(null);
+            }
+        }
+
+        const handleMouseDown = ()=> setIsSelecting(true);
+        const handleMouseUp = ()=> setIsSelecting(false);
+
+        document.addEventListener('selectionchange',handleGetSelection);
+        document.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('mouseup', handleMouseUp);
+
+        return ()=> {
+            document.removeEventListener('selectionchange',handleGetSelection);
+            document.removeEventListener('mousedown', handleMouseDown);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    },[]);
+
+    return {
+        selectionText,
+        isSelecting,
+        range
+    }
+}
 
 
-export {useDebounce,useDebounceEffect, useMediaQuery, usePrevState};
+
+export {useDebounce,useDebounceEffect, useMediaQuery, usePrevState, useTextSelection};

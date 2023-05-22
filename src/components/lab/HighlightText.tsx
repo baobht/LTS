@@ -1,6 +1,6 @@
 interface IHighlightText {
 	// eslint-disable-next-line @typescript-eslint/ban-types
-	handleHighlightText: Function;
+	// handleHighlightText: Function;
 	data: {
 		atTime: string;
 		content: string;
@@ -9,13 +9,11 @@ interface IHighlightText {
 }
 
 const HighlightText = (props: IHighlightText) => {
-	const { handleHighlightText = undefined, data, index } = props;
-
+	const { data, index } = props;
+	// onMouseUp={(e) => (handleHighlightText ? handleHighlightText(e, index) : null)}
 	return (
 		<div className="bg-white rounded-md p-4 text-black">
-			<span id={`paragraph_${index}`} onMouseUp={(e) => (handleHighlightText ? handleHighlightText(e, index) : null)}>
-				{data.content}
-			</span>
+			<span id={`paragraph_${index}`}>{data.content}</span>
 		</div>
 	);
 };
