@@ -1,7 +1,7 @@
 import videoURL from '@/assets/videos/video.mp4';
 import { HighlightText, ImageEditor, VideoControlCustom } from '@/components';
-import { getParentElement } from '@/utils/commonFunctions';
-import { useMediaQuery, useTextSelection } from '@/utils/customHooks';
+import { EPopover } from '@/constants/types';
+import { useTextSelection } from '@/utils/customHooks';
 import { Box, Button, Menu, MenuItem } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
@@ -28,50 +28,50 @@ const listData: IListData[] = [
 ];
 
 const Home = () => {
-	const isMobile = useMediaQuery(500);
 	const [textHighlight, setTextHighlight] = useState<any[]>([]);
 	const [selectionState, setSelectionState] = useState<any>();
 	const [paragraphs, setParagraphs] = useState<any[]>([]);
-	const [typeMenu, setTypeMenu] = useState<string>('SELECT');
+	const [typeMenu, setTypeMenu] = useState<string>(EPopover.SELECT);
 	const [correctText, setCorrectText] = useState<string>('');
-	const [elementRemove, setElementRemove] = useState<any>();
 	const [open, setOpen] = useState<boolean>(false);
-	const elementRef = useRef<HTMLElement | null>(null);
+
+	//new
 	const { selectionText, isSelecting, range } = useTextSelection();
-	const newSpanElementRef = useRef<HTMLSpanElement[]>([]);
+	const elementRef = useRef<HTMLElement | null>(null);
+	const newSpanElementsRef = useRef<HTMLSpanElement[]>([]);
+	const [selectionsRemove, setSelectionsRemove] = useState<any[]>([]);
 
 	useEffect(() => {
-		const handleNewSpanClick = (event: any, index: number) => {
+		const handleNewSpanClick = (event: any) => {
 			elementRef.current = event.currentTarget as HTMLElement;
-			setTypeMenu('DELETE');
-			setElementRemove({
-				index,
-				element: event.target,
-			});
-			setOpen(true);
 		};
 		const handleHighlightText = (selectionText: string, range: Range) => {
-			const index = listData.findIndex((data) => data?.content.includes(selectionText));
-			console.log(index);
-			if (index !== -1) {
+			listData.find((data) => data?.content.includes(selectionText));
+			if (
+				listData.find((data) => data?.content.includes(selectionText)) &&
+				(range.endContainer.parentNode as HTMLElement)?.id
+			) {
+				const index = +(range.endContainer.parentNode as HTMLElement).id?.split('_')?.[1];
 				const temp = selectionText;
 				const extractContents = range.extractContents();
 				const newSpanElement = document.createElement('span');
-				newSpanElement.classList.add('bg-red-600', 'text-blue-300', 'select-none');
+				newSpanElement.classList.add('text-blue-300', 'select-none');
 				newSpanElement.setAttribute('data-selection', selectionText);
-				newSpanElement.addEventListener('click', (e) => handleNewSpanClick(e, index));
+				newSpanElement.setAttribute('data-index', `${index}`);
+				newSpanElement.addEventListener('click', handleNewSpanClick);
 				newSpanElement.appendChild(extractContents);
 				range.insertNode(newSpanElement);
-				newSpanElementRef.current.push(newSpanElement);
+				newSpanElementsRef.current.push(newSpanElement);
+				elementRef.current = newSpanElement;
 
 				const newTextHighlight = textHighlight.map((text, i) => {
 					if (i === index) {
-						console.log('1');
 						return {
 							...text,
 							selected: [
-								...(text?.selected.filter((txt: string) => !selectionText.includes(txt) || temp.trim().includes(txt)) ||
-									[]),
+								...(text?.selected.filter(
+									(txt: string) => !selectionText.includes(txt) || !temp.trim().includes(txt),
+								) || []),
 								selectionText || temp.trim(),
 							],
 						};
@@ -80,72 +80,44 @@ const Home = () => {
 					return text;
 				});
 				setTextHighlight(newTextHighlight);
+				setTypeMenu(EPopover.SELECT);
+				setOpen(true);
 			}
 		};
 		if (!isSelecting && selectionText && range) {
 			handleHighlightText(selectionText, range);
 		}
 		return () => {
-			newSpanElementRef.current.forEach((span) => span.removeEventListener('click', handleNewSpanClick));
+			newSpanElementsRef.current.forEach((span) => span.removeEventListener('click', handleNewSpanClick));
 		};
-	}, [selectionText, isSelecting, range]);
+	}, [selectionText, isSelecting, range, selectionsRemove]);
 
-	// const handleHighlightText = async (e: Event, index: number): Promise<void> => {
-	// 	const highlightValue = window.getSelection();
-	// 	if (highlightValue && highlightValue.rangeCount > 0 && highlightValue.toString().trim().length > 0) {
-	// 		if (listData[index]?.content.includes(highlightValue.toString().trim())) {
-	// 			const range = highlightValue.getRangeAt(0);
-	// 			setSelectionState({
-	// 				index,
-	// 				range,
-	// 				highlightValue: highlightValue.toString().trim(),
-	// 			});
-	// 			const temp = highlightValue.toString();
-	// 			const selectedText = range.extractContents();
-	// 			const span = document.createElement('span');
-	// 			span.classList.add('bg-red-600', 'text-blue-300', 'select-none');
-	// 			span.appendChild(selectedText);
-	// 			range.insertNode(span);
-	// 			// console.log('///####', highlightValue);
-	// 			// const containerNode = e.target;
-	// 			// if (!highlightValue.toString() && containerNode.contains(range.commonAncestorContainer)) {
-	// 			// 	span.replaceWith(document.createTextNode(temp));
-	// 			// 	return;
-	// 			// }
-	// 			span.setAttribute('data-value', `${highlightValue.toString().trim()}`);
-	// 			span.addEventListener('click', (e) => {
-	// 				setOpen(true);
-	// 				elementRef.current = e.currentTarget as HTMLElement;
-	// 				setTypeMenu('DELETE');
-	// 				setElementRemove({
-	// 					index,
-	// 					element: e.target,
-	// 				});
-	// 			});
-	// 			const newTextHighlight = textHighlight.map((text, i) => {
-	// 				if (i === index) {
-	// 					return {
-	// 						...text,
-	// 						selected: [
-	// 							...(text?.selected.filter(
-	// 								(txt: string) => !highlightValue.toString().trim().includes(txt) || temp.trim().includes(txt),
-	// 							) || []),
-	// 							highlightValue.toString().trim() || temp.trim(),
-	// 						],
-	// 					};
-	// 				}
-
-	// 				return text;
-	// 			});
-	// 			setTextHighlight(newTextHighlight);
-	// 			setSelectionState(null);
-
-	// 			setTypeMenu('SELECT');
-	// 			elementRef.current = span as HTMLElement;
-	// 			setOpen(true);
-	// 		}
-	// 	}
-	// };
+	useEffect(() => {
+		const handleToggleSelection = (e: Event) => {
+			setSelectionsRemove((pre) => {
+				if ([...pre].includes(e.target)) {
+					(e.target as Element)?.classList.remove('bg-blue-300', 'text-white', 'rounded-md');
+					setTypeMenu(EPopover.SELECT);
+					return [...pre].filter((ele) => ele !== e.target);
+				} else {
+					(e.target as Element)?.classList.add('bg-blue-300', 'text-white', 'rounded-md');
+					setTypeMenu(EPopover.DELETE);
+					setOpen(true);
+					return [...pre, e.target];
+				}
+			});
+		};
+		if (newSpanElementsRef?.current.length) {
+			newSpanElementsRef.current.forEach((ele) => {
+				ele.addEventListener('click', handleToggleSelection);
+			});
+		}
+		return () => {
+			newSpanElementsRef.current.forEach((ele) => {
+				ele.removeEventListener('click', handleToggleSelection);
+			});
+		};
+	}, [newSpanElementsRef?.current.length]);
 
 	const handleAddBroll = () => {
 		// const selectedText = selectionState.range.extractContents();
@@ -188,34 +160,52 @@ const Home = () => {
 	};
 
 	const handleRemove = (dataRemove: any) => {
-		const newTextHighlight = textHighlight.map((text, index) => {
-			if (index === dataRemove.index) {
-				const parentElement = getParentElement(dataRemove.element);
-				const childSpan = parentElement.querySelectorAll('span');
-				const valueRemove: string[] = [];
+		const valueRemove: { selected: string; index: number }[] = [];
+		textHighlight.forEach((__, index) => {
+			if (index === +dataRemove.dataset.index) {
+				const childSpan = dataRemove.querySelectorAll('span');
 				childSpan.forEach((span: HTMLElement) => {
-					valueRemove.push(span.getAttribute('data-value') || '');
+					valueRemove.push({
+						selected: span.getAttribute('data-selection') || '',
+						index: Number(span.dataset.index) || 0,
+					});
 					const textNode = document.createTextNode(span.textContent || '');
 					span.replaceWith(textNode);
 				});
-				const textNode = document.createTextNode(parentElement.textContent || '');
-				parentElement.replaceWith(textNode);
-				valueRemove.push(parentElement.getAttribute('data-value') || '');
-				return {
-					...text,
-					selected: text.selected.filter((txt: string) => valueRemove.includes(txt) === false),
-				};
+				const textNode = document.createTextNode(dataRemove.textContent || '');
+				dataRemove.replaceWith(textNode);
+				valueRemove.push({
+					selected: dataRemove.getAttribute('data-selection') || '',
+					index: +dataRemove.dataset.index,
+				});
 			}
-
-			return text;
 		});
-		setOpen(false);
+
+		return valueRemove;
+	};
+
+	const handleRemoveMultiple = () => {
+		const compareTextHighlightArr = selectionsRemove.reduce((total, current) => {
+			const newValueRemove = handleRemove(current);
+			return [...total, ...newValueRemove];
+		}, []);
+		const newTextHighlight = textHighlight.map((txt, index) => {
+			const compArr = compareTextHighlightArr
+				.filter((element: any) => element.index === index)
+				.map((e: { index: number; selected: string }) => e.selected);
+			return {
+				...txt,
+				selected: txt.selected.filter((ele: any) => !compArr.includes(ele)),
+			};
+		});
+		newSpanElementsRef.current = newSpanElementsRef.current.filter((ele) => !selectionsRemove.includes(ele));
 		setTextHighlight(newTextHighlight);
+		setOpen(false);
+		setTypeMenu(EPopover.SELECT);
 	};
 
 	const handleOnClose = () => {
 		setOpen(false);
-		setTypeMenu('SELECT');
 	};
 
 	const handleAddCorrect = () => {
@@ -249,10 +239,6 @@ const Home = () => {
 			setParagraphs(JSON.parse(JSON.stringify(listData)));
 		}
 	}, [listData]);
-
-	useEffect(() => {
-		console.log('text highlight', textHighlight[0]?.selected);
-	}, [textHighlight]);
 
 	return (
 		<div className="p-4 flex flex-col gap-4">
@@ -298,17 +284,17 @@ const Home = () => {
 						backgroundColor: '#4C667B',
 					},
 				}}
-				onClose={() => handleOnClose()}
+				onClose={handleOnClose}
 			>
-				{typeMenu.length > 0 && typeMenu === 'SELECT' ? (
+				{typeMenu.length > 0 && typeMenu === EPopover.SELECT ? (
 					<span className="flex gap-3">
-						<MenuItem onClick={() => setTypeMenu('CORRECT')}>Correct</MenuItem>
+						<MenuItem onClick={() => setTypeMenu(EPopover.CORRECT)}>Correct</MenuItem>
 						<div></div>
 						<MenuItem onClick={() => handleAddBroll()}>Add B-roll</MenuItem>
 					</span>
-				) : typeMenu === 'DELETE' ? (
-					<MenuItem onClick={() => handleRemove(elementRemove)}>Remove</MenuItem>
-				) : typeMenu === 'CORRECT' ? (
+				) : typeMenu === EPopover.DELETE ? (
+					<MenuItem onClick={handleRemoveMultiple}>Remove</MenuItem>
+				) : typeMenu === EPopover.CORRECT ? (
 					<MenuItem
 						sx={{
 							position: 'relative',
@@ -332,7 +318,7 @@ const Home = () => {
 								top: '-2px',
 								right: '2px',
 							}}
-							onClick={() => handleOnClose()}
+							onClick={handleOnClose}
 						>
 							close
 						</Box>

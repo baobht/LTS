@@ -3,3 +3,8 @@ export enum EBroll {
 	CROP = 'CROP',
 	KENBURNS = 'KENBURNSl',
 }
+export enum EPopover {
+	SELECT = 'SELECT',
+	DELETE = 'DELETE',
+	CORRECT = 'CORRECT',
+}

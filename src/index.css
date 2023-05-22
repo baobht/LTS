@@ -146,6 +146,10 @@ img.kenburns-effect {
 	}
 }
 
+span.bg-blue-300.select-none span {
+	color: #fff;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
