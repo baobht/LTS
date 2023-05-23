@@ -29,6 +29,7 @@ body {
 	place-items: center;
 	min-width: 320px;
 	min-height: 100vh;
+	overflow-x: hidden !important;
 }
 
 h1 {
@@ -135,6 +136,23 @@ input[type='range']::-webkit-slider-thumb {
 
 img.kenburns-effect {
 	animation: kenburns 2s infinite alternate-reverse;
+}
+
+button.outline-none {
+	outline: none !important;
+}
+
+.scrollbar_custom.scrollbar_small::-webkit-scrollbar {
+	width: 3.71px;
+	background: #e8f0fd;
+	border-radius: 25px;
+	overflow: hidden;
+}
+
+.scrollbar_custom.scrollbar_small::-webkit-scrollbar-thumb {
+	background: #aecfff;
+	width: 3.71px;
+	border-radius: 25px;
 }
 
 @keyframes kenburns {

@@ -51,7 +51,7 @@ const VideoControlCustom = (props: IVideoControl) => {
 			<video
 				ref={videoRef}
 				src={src}
-				className="rounded-lg w-full object-cover"
+				className="rounded-[10px] w-full object-cover"
 				onCanPlay={(e) => {
 					setVideoState({
 						...videoState,
@@ -69,7 +69,7 @@ const VideoControlCustom = (props: IVideoControl) => {
 				onEnded={() => setIsPlay(!isPlay)}
 			></video>
 
-			<div className="mt-4 w-full">
+			<div className="mt-9 w-full">
 				<input
 					type="range"
 					min={0}
@@ -77,65 +77,66 @@ const VideoControlCustom = (props: IVideoControl) => {
 					step={0.001}
 					value={videoState.currentPercent}
 					style={{ backgroundSize: `${videoState.currentPercent}%` }}
-					className="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer overflow-hidden"
+					className="w-full h-1.5 bg-blue-200 rounded-lg appearance-none cursor-pointer overflow-hidden"
 					onChange={(e) => handleChangeCurrentTime(e.target.value)}
 				/>
-				<div className="mt-4 flex items-center gap-4 relative">
-					{isPlay ? (
-						<button
-							type="button"
-							className="flex h-12 w-12 bg-primary rounded-full items-center justify-center p-2 border-none outline-none"
-							onClick={pause}
-						>
-							<BsPauseFill size={20} />
-						</button>
-					) : (
-						<button
-							type="button"
-							className="flex h-12 w-12 bg-primary rounded-full items-center justify-center p-2 border-none outline-none"
-							onClick={play}
-						>
-							<BsFillPlayFill size={20} />
-						</button>
-					)}
-
-					<div className="group flex items-center justify-center gap-3 volume-container">
-						{videoRef.current && videoRef.current.volume > 0 ? (
-							<BsVolumeUp
-								size={30}
-								className="cursor-pointer"
-								onClick={() => {
-									if (videoRef.current) {
-										videoRef.current.volume = 0;
-									}
-								}}
-							/>
+				<div className="mt-[35px] flex items-center justify-between gap-4 px-4">
+					<div className="flex items-center gap-5 w-full">
+						{isPlay ? (
+							<button
+								type="button"
+								className="flex h-8 w-8 bg-primary rounded-full items-center justify-center p-2 border-none outline-none"
+								onClick={pause}
+							>
+								<BsPauseFill size={20} />
+							</button>
 						) : (
-							<BsVolumeMute
-								size={30}
-								className="cursor-pointer"
-								onClick={() => {
-									if (videoRef.current) {
-										videoRef.current.volume = videoState.volume;
-									}
-								}}
-							/>
+							<button
+								type="button"
+								className="flex h-8 w-8 bg-primary rounded-full items-center justify-center p-2 border-none outline-none"
+								onClick={play}
+							>
+								<BsFillPlayFill size={20} />
+							</button>
 						)}
-						<input
-							type="range"
-							min={0}
-							max={1}
-							step={0.001}
-							value={videoState?.volume}
-							style={{ backgroundSize: `${videoState?.volume * 100}%` }}
-							className=" w-full transition-all duration-75 linear h-1 bg-blue-200 rounded-lg appearance-none cursor-pointer overflow-hidden"
-							onChange={(e) => handleChangeVolume(e.target.value)}
-						/>
+
+						<div className="group flex items-center justify-center gap-3 volume-container">
+							{videoRef.current && videoRef.current.volume > 0 ? (
+								<BsVolumeUp
+									size={40}
+									className="cursor-pointer text-black"
+									onClick={() => {
+										if (videoRef.current) {
+											videoRef.current.volume = 0;
+										}
+									}}
+								/>
+							) : (
+								<BsVolumeMute
+									size={40}
+									className="cursor-pointer text-black"
+									onClick={() => {
+										if (videoRef.current) {
+											videoRef.current.volume = videoState.volume;
+										}
+									}}
+								/>
+							)}
+							<input
+								type="range"
+								min={0}
+								max={1}
+								step={0.001}
+								value={videoState?.volume}
+								style={{ backgroundSize: `${videoState?.volume * 100}%` }}
+								className=" w-full transition-all duration-75 linear h-1 bg-[#DAE8FD] rounded-lg appearance-none cursor-pointer overflow-hidden"
+								onChange={(e) => handleChangeVolume(e.target.value)}
+							/>
+						</div>
 					</div>
 
-					<p className="video_time absolute left-24">
-						<span className="text-2xl font-bold">{videoState.currentTime || '00:00'}</span> /{' '}
-						{videoState.duration || '00:00'}
+					<p className="video_time w-full text-end text-black text-sm font-bold select-none ">
+						<span className="text-3xl">{videoState.currentTime || '00:00'}</span> / {videoState.duration || '00:00'}
 					</p>
 				</div>
 			</div>
