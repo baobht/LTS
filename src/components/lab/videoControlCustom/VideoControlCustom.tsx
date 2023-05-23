@@ -48,7 +48,6 @@ const VideoControlCustom = (props: IVideoControl) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [videoRef.current]);
-	console.log(isVideoLoading);
 	return (
 		<div className="w-full relative">
 			{!isVideoLoading ? (

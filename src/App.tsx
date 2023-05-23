@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Home from '@/components/Home';
-import { AddBroll } from './components';
+import { AddBroll, UserProfile } from './components';
 
 function App() {
 	return (
@@ -8,6 +8,7 @@ function App() {
 			<Routes>
 				<Route path="/home" element={<Home />} />
 				<Route path="/add-broll" element={<AddBroll />} />
+				<Route path="/user-profile" element={<UserProfile />} />
 			</Routes>
 		</div>
 	);
