@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { Box, Button, Menu, MenuItem, Popper, TextField } from '@mui/material';
 import {} from 'react';
-import { ScrollView, VideoControlCustom, PopperArrow } from '@/components';
+import { ScrollView, VideoControlCustom } from '@/components';
 import videoURL from '@/assets/videos/video.mp4';
 import { BsCheckLg, BsChevronDown, BsCloudDownload } from 'react-icons/bs';
 import Folder from '@/assets/imgs/icons/folder.svg';
@@ -451,7 +451,6 @@ const AddBroll = () => {
 				sx={{
 					boxShadow: '2px 2px 10px #000',
 					borderRadius: '8px',
-					overflow: 'hidden',
 					position: 'relative',
 					marginTop: '20px',
 				}}
@@ -466,7 +465,20 @@ const AddBroll = () => {
 					],
 				}}
 			>
-				<Box component="ul" sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
+				<Box component="ul" sx={{ border: 1, p: 1, bgcolor: 'background.paper', borderRadius: '8px' }}>
+					<Box
+						component="div"
+						sx={{
+							width: 0,
+							height: 0,
+							borderLeft: '8px solid transparent',
+							borderRight: '8px solid transparent',
+							borderBottom: '15px solid white',
+							position: 'absolute',
+							top: '-10px',
+							right: '15px',
+						}}
+					></Box>
 					<Box component="li">
 						<Button
 							sx={{
