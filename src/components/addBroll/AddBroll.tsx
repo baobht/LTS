@@ -4,10 +4,10 @@ import {} from 'react';
 import { ScrollView, VideoControlCustom } from '@/components';
 import videoURL from '@/assets/videos/video.mp4';
 import { BsCheckLg, BsChevronDown, BsCloudDownload } from 'react-icons/bs';
-import Folder from '@/assets/imgs/icons/folder.svg';
-import Trash from '@/assets/imgs/icons/trash.svg';
 import { EPopover } from '@/constants/types';
 import { useTextSelection } from '@/utils/customHooks';
+import Folder from '@/assets/imgs/icons/folder.svg';
+import Trash from '@/assets/imgs/icons/trash.svg';
 
 interface IListData {
 	atTime: string;
