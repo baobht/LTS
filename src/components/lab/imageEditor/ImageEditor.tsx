@@ -107,6 +107,8 @@ const ImageEditor = () => {
 			{selectedImage && (
 				<ReactCrop
 					crop={crop}
+					minHeight={60}
+					minWidth={60}
 					onChange={(crop, percentCrop) => {
 						setCompletedCrop(crop);
 						setCrop(percentCrop);
