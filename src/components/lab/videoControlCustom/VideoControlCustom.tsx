@@ -1,7 +1,7 @@
 import { convertTimeVideo } from '@/utils/commonFunctions';
 import { Box, Skeleton } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
-import { BsFillPlayFill, BsPauseFill, BsVolumeUp, BsVolumeMute } from 'react-icons/bs';
+import { BsFillPlayFill, BsPauseFill, BsVolumeMute, BsVolumeUp } from 'react-icons/bs';
 
 interface IVideoControl {
 	src: string;
@@ -80,7 +80,7 @@ const VideoControlCustom = (props: IVideoControl) => {
 							max={100}
 							step={0.001}
 							value={videoState.currentPercent}
-							style={{ backgroundSize: `${videoState.currentPercent}%` }}
+							style={{ backgroundSize: `${videoState.currentPercent + 0.1}%` }}
 							className="w-full h-1.5 bg-blue-200 rounded-lg appearance-none cursor-pointer overflow-hidden"
 							onChange={(e) => handleChangeCurrentTime(e.target.value)}
 						/>
@@ -133,7 +133,7 @@ const VideoControlCustom = (props: IVideoControl) => {
 										step={0.001}
 										value={videoState?.volume}
 										style={{ backgroundSize: `${videoState?.volume * 100}%` }}
-										className=" w-full transition-all duration-75 linear h-1 bg-[#DAE8FD] rounded-lg appearance-none cursor-pointer overflow-hidden"
+										className=" w-full  linear h-1 bg-[#DAE8FD] rounded-lg appearance-none cursor-pointer overflow-hidden"
 										onChange={(e) => handleChangeVolume(e.target.value)}
 									/>
 								</div>

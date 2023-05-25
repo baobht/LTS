@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, Button } from '@mui/material';
-import { useId, useState, useEffect, ChangeEvent, SetStateAction } from 'react';
-import { MdOutlineDriveFolderUpload } from 'react-icons/md';
-import { videoAcceptTypes } from '@/constants/types';
 import { UploadProgressing } from '@/components';
+import { videoAcceptTypes } from '@/constants/types';
 import { videoUpload } from '@/services/video.service';
+import { Box } from '@mui/material';
+import { ChangeEvent, SetStateAction, useEffect, useId, useState } from 'react';
+import { MdOutlineDriveFolderUpload } from 'react-icons/md';
 const NewProject = () => {
 	const isUser = false;
 	const renderId = useId(),
 		[uploadFile, setUploadFile] = useState<SetStateAction<File | null>>(null),
-		[uploadProgressing, setUploadProgressing] = useState<number>(30),
+		[uploadProgressing, setUploadProgressing] = useState<number>(0),
 		handleOnPaste = (event: any) => {
 			event.preventDefault();
 			if (uploadFile && uploadProgressing) return;
@@ -60,7 +60,7 @@ const NewProject = () => {
 				onDrop={handleOnPaste}
 				className="w-full max-w-[508px] min-h-[253px] border border-dashed rounded-2xl border-[#879BAC] flex items-center justify-center px-8 pt-11 pb-10"
 			>
-				{uploadFile && uploadProgressing ? (
+				{!uploadFile && !uploadProgressing ? (
 					<div className="w-full px-[57px] flex flex-col items-center justify-center">
 						<MdOutlineDriveFolderUpload size={35} color="#4285f4" className="mb-6" />
 						<p className="font-normal text-[#929292] mb-4">Drag and drop/click to upload (mp4 only)</p>
