@@ -168,6 +168,27 @@ span.bg-blue-300.select-none span {
 	color: #fff;
 }
 
+.progress_bar::before {
+	content: '';
+	position: absolute;
+	height: 100%;
+	width: 8px;
+	animation: progressing 4s ease-in-out infinite;
+	filter: blur(8px);
+	z-index: 1;
+}
+
+@keyframes progressing {
+	from {
+		background-color: hsl(217, 84%, 65%);
+		left: 0;
+	}
+	to {
+		background-color: hsl(217, 84%, 85%);
+		left: var(--width);
+	}
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
