@@ -26,7 +26,7 @@ const data = [
 
 const Pricing = () => {
 	return (
-		<section className="w-screen h-screen bg-white text-black">
+		<section className="w-full h-full bg-white text-black">
 			<div className="w-full flex items-center justify-between mb-20">
 				<h2 className="font-bold text-3xl">Subscription</h2>
 				<Button className="!outline-none !bg-primary !capitalize !rounded-[10px] !text-white !py-4 !px-12 !text-lg">

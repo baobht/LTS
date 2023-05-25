@@ -80,7 +80,11 @@ const StripeCard = ({ data }: { data: any }) => {
 				</p>
 			</div>
 
-			<Button variant="contained" className={`!normal-case !rounded-full !outline-none ${renderBgClass(data?.type)}`}>
+			<Button
+				variant="contained"
+				className={`!normal-case !rounded-full !outline-none ${renderBgClass(data?.type)}`}
+				onClick={() => console.log('handleStripe')}
+			>
 				{data?.type === 'starter' ? 'Start width ' : 'Upgrade width '}{' '}
 				<span className="capitalize"> &nbsp;{data?.type}</span>
 			</Button>
