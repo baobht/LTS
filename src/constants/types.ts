@@ -9,4 +9,4 @@ export enum EPopover {
 	CORRECT = 'CORRECT',
 }
 
-export const videoAceptTypes = ["MP4","MOV", "WMV", "AVI", "AVCHD", "FLV", "F4V", "SWF"," MKV", "WEBM", "HTMLS","MPEG-2"];
+export const videoAcceptTypes = ["MP4","MOV", "WMV", "AVI", "AVCHD", "FLV", "F4V", "SWF"," MKV", "WEBM", "HTMLS","MPEG-2"];
