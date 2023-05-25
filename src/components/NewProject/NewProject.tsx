@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Button } from '@mui/material';
 import { useId, useState, useEffect, ChangeEvent, SetStateAction } from 'react';
 import { MdOutlineDriveFolderUpload } from 'react-icons/md';
@@ -35,12 +36,12 @@ const NewProject = () => {
 		};
 
 	useEffect(() => {
-		const handleUpload = () => {
+		const handleUpload = async () => {
 			if (uploadFile) {
 				const formData = new FormData();
 				// formData.append('userId', user?.id);
 				formData.append('video', uploadFile as Blob);
-				videoUpload(formData, setUploadProgressing);
+				await videoUpload(formData, setUploadProgressing);
 			}
 		};
 		if (uploadFile) handleUpload();
