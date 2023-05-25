@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Home from '@/components/Home';
-import { AddBroll, NewProject, ProjectManagement, UserProfile } from './components';
+import { AddBroll, NewProject, Pricing, ProjectManagement, UserProfile } from './components';
 
 function App() {
 	return (
@@ -11,6 +11,7 @@ function App() {
 				<Route path="/user-profile" element={<UserProfile />} />
 				<Route path="/project-management" element={<ProjectManagement />} />
 				<Route path="/new-project" element={<NewProject />} />
+				<Route path="/pricing" element={<Pricing />} />
 			</Routes>
 		</div>
 	);
