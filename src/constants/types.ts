@@ -8,3 +8,5 @@ export enum EPopover {
 	DELETE = 'DELETE',
 	CORRECT = 'CORRECT',
 }
+
+export const videoAceptTypes = ["MP4","MOV", "WMV", "AVI", "AVCHD", "FLV", "F4V", "SWF"," MKV", "WEBM", "HTMLS","MPEG-2"];
