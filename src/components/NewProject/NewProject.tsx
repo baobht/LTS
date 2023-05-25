@@ -41,7 +41,11 @@ const NewProject = () => {
 				const formData = new FormData();
 				// formData.append('userId', user?.id);
 				formData.append('video', uploadFile as Blob);
-				await videoUpload(formData, setUploadProgressing);
+				const res = await videoUpload(formData, setUploadProgressing);
+				if (res.status === 200) {
+					setUploadFile(null);
+					setUploadProgressing(0);
+				}
 			}
 		};
 		if (uploadFile) handleUpload();
