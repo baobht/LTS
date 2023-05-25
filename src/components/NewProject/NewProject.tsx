@@ -1,8 +1,9 @@
 import { Box, Button } from '@mui/material';
-import { useId, useState, ChangeEvent, SetStateAction } from 'react';
+import { useId, useState, useEffect, ChangeEvent, SetStateAction } from 'react';
 import { MdOutlineDriveFolderUpload } from 'react-icons/md';
-import { videoAceptTypes } from '@/constants/types';
+import { videoAcceptTypes } from '@/constants/types';
 import { UploadProgressing } from '@/components';
+import { videoUpload } from '@/services/video.service';
 const NewProject = () => {
 	const isUser = false;
 	const renderId = useId(),
@@ -12,7 +13,11 @@ const NewProject = () => {
 			event.preventDefault();
 			if (uploadFile && uploadProgressing) return;
 			const file = event.dataTransfer.files[0];
-			if (file && file?.type.startsWith('video/') && videoAceptTypes.includes(file?.type.split('/')[1].toUpperCase())) {
+			if (
+				file &&
+				file?.type.startsWith('video/') &&
+				videoAcceptTypes.includes(file?.type.split('/')[1].toUpperCase())
+			) {
 				setUploadFile(file);
 			} else {
 				console.log('toast error');
@@ -21,7 +26,7 @@ const NewProject = () => {
 		handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
 			if (event.target && event.target?.files && event.target?.files?.length > 0) {
 				const file = event.target?.files[0];
-				if (videoAceptTypes.includes(file?.type.split('/')[1].toUpperCase())) {
+				if (videoAcceptTypes.includes(file?.type.split('/')[1].toUpperCase())) {
 					setUploadFile(file);
 				}
 			} else {
@@ -29,8 +34,20 @@ const NewProject = () => {
 			}
 		};
 
+	useEffect(() => {
+		const handleUpload = () => {
+			if (uploadFile) {
+				const formData = new FormData();
+				// formData.append('userId', user?.id);
+				formData.append('video', uploadFile as Blob);
+				videoUpload(formData, setUploadProgressing);
+			}
+		};
+		if (uploadFile) handleUpload();
+	}, [uploadFile]);
+
 	return (
-		<section className="w-screen h-screen bg-white text-black flex flex-col items-center justify-center">
+		<section className="w-full h-full bg-white text-black flex flex-col items-center justify-center">
 			<h2 className="font-bold text-5xl mb-8">Rollify Your Video</h2>
 			<p className="text-xl font-medium text-[#929292] mb-24">Easily find and add B-roll to your videos ⚡️</p>
 			<div
