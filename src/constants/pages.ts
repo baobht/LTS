@@ -6,4 +6,5 @@ export enum EPages {
 	UPDATE_PROJECT = '/rollify/:id',
 	USER_PROFILE = '/user-profile',
 	PROJECT_MANAGEMENT = '/project-management',
+	SUPPORT = '/support'
 }

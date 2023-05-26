@@ -3,6 +3,14 @@ import { EBroll } from '@/constants/types';
 let previewUrl = '';
 
 export const convertTimeVideo = (duration = 0): string => {
+	if(duration >= 3600){
+		const timeInHours = Math.floor(duration / 3600);
+		const timeRemaining = duration % 3600;
+		const timeInMinutes = Math.floor(timeRemaining / 60) >= 10 ? Math.floor(timeRemaining / 60) : `0${Math.floor(timeRemaining / 60)}`;
+		const timeInSeconds = Math.floor(timeRemaining % 60) >= 10 ? Math.floor(timeRemaining % 60) : `0${Math.floor(timeRemaining % 60)}`;
+		console.log(`${timeInHours}:${timeInMinutes}:${timeInSeconds}`)
+		return `${timeInHours}:${timeInMinutes}:${timeInSeconds}`;
+	}
 	const timeInMinutes = Math.floor(duration / 60) >= 10 ? Math.floor(duration / 60) : `0${Math.floor(duration / 60)}`;
 	const timeInSeconds = Math.floor(duration % 60) >= 10 ? Math.floor(duration % 60) : `0${Math.floor(duration % 60)}`;
 	return `${timeInMinutes}:${timeInSeconds}`;

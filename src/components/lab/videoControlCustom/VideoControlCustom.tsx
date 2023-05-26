@@ -13,19 +13,19 @@ const VideoControlCustom = (props: IVideoControl) => {
 		[isVideoLoading, setIsVideoLoading] = useState<boolean>(true),
 		[isPlay, setIsPlay] = useState<boolean>(false),
 		[videoState, setVideoState] = useState<any>({ currentPercent: 0, volume: 0.6 }),
-		play = () => {
+		play = (): void => {
 			if (videoRef.current) {
 				setIsPlay(true);
 				videoRef.current.play();
 			}
 		},
-		pause = () => {
+		pause = (): void => {
 			if (videoRef.current) {
 				setIsPlay(false);
 				videoRef.current.pause();
 			}
 		},
-		handleChangeVolume = (value: number | string) => {
+		handleChangeVolume = (value: number | string): void => {
 			if (videoRef.current) {
 				videoRef.current.volume = Number(value);
 				setVideoState({
@@ -34,7 +34,7 @@ const VideoControlCustom = (props: IVideoControl) => {
 				});
 			}
 		},
-		handleChangeCurrentTime = (value: number | string) => {
+		handleChangeCurrentTime = (value: number | string): void => {
 			if (videoRef.current) {
 				const newCurrentTime = (videoRef.current.duration / 100) * Number(value);
 				videoRef.current.currentTime = newCurrentTime;
@@ -92,7 +92,7 @@ const VideoControlCustom = (props: IVideoControl) => {
 										className="flex h-8 w-8 bg-primary rounded-full items-center justify-center p-2 border-none outline-none"
 										onClick={pause}
 									>
-										<BsPauseFill size={20} />
+										<BsPauseFill color="white" size={20} />
 									</button>
 								) : (
 									<button
@@ -100,7 +100,7 @@ const VideoControlCustom = (props: IVideoControl) => {
 										className="flex h-8 w-8 bg-primary rounded-full items-center justify-center p-2 border-none outline-none"
 										onClick={play}
 									>
-										<BsFillPlayFill size={20} />
+										<BsFillPlayFill color="white" size={20} />
 									</button>
 								)}
 
@@ -132,7 +132,7 @@ const VideoControlCustom = (props: IVideoControl) => {
 										max={1}
 										step={0.001}
 										value={videoState?.volume}
-										style={{ backgroundSize: `${videoState?.volume * 100}%` }}
+										style={{ backgroundSize: `${videoState?.volume * 100 + 0.1}%` }}
 										className=" w-full  linear h-1 bg-[#DAE8FD] rounded-lg appearance-none cursor-pointer overflow-hidden"
 										onChange={(e) => handleChangeVolume(e.target.value)}
 									/>

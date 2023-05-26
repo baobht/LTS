@@ -4,16 +4,10 @@ import { useId } from 'react';
 const UserProfile = () => {
 	const renderId = useId();
 	return (
-		<section className="bg-white w-screen h-screen px-[50px] pb-11">
+		<section className="bg-white w-full h-full p-[50px] pb-11">
 			<div className="flex items-center justify-between mb-20">
 				<h2 className="text-black font-bold text-3xl">Profile</h2>
-				<Button
-					sx={{
-						outline: 'none !important',
-						textTransform: 'capitalize',
-					}}
-					variant="contained"
-				>
+				<Button className="!outline-none !bg-primary !capitalize !rounded-[10px] !text-white !py-4 !px-12 !text-lg">
 					New Project
 				</Button>
 			</div>
