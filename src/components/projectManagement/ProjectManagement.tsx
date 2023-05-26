@@ -81,18 +81,12 @@ const ProjectManagement = () => {
 		},
 	];
 	return (
-		<section className="bg-white px-[50px] pb-11">
+		<section className="bg-white p-[50px] pb-11">
 			<div className="flex items-center justify-between mb-20">
 				<div className="flex items-center gap-12">
 					<h2 className="text-black font-bold text-3xl">Profile</h2>
 					<div className="flex items-center gap-1">
-						<Button
-							sx={{
-								outline: 'none !important',
-								width: 'fit-content',
-							}}
-							onClick={() => setIsActive(false)}
-						>
+						<Button className="outline-none w-fit" onClick={() => setIsActive(false)}>
 							<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
 								<path
 									d="M1.16333 19.7734V5.77344H15.1633V19.7734H1.16333ZM17.1633 11.7734V5.77344H23.1633V11.7734H17.1633ZM19.1633 9.77344H21.1633V7.77344H19.1633V9.77344ZM3.16333 17.7734H13.1633V7.77344H3.16333V17.7734ZM4.16333 15.7734H12.1633L9.53833 12.2734L7.66333 14.7734L6.28833 12.9484L4.16333 15.7734ZM17.1633 19.7734V13.7734H23.1633V19.7734H17.1633ZM19.1633 17.7734H21.1633V15.7734H19.1633V17.7734Z"
@@ -100,13 +94,7 @@ const ProjectManagement = () => {
 								/>
 							</svg>
 						</Button>
-						<Button
-							sx={{
-								outline: 'none !important',
-								width: 'fit-content',
-							}}
-							onClick={() => setIsActive(true)}
-						>
+						<Button className="outline-none w-fit" onClick={() => setIsActive(true)}>
 							<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
 								<g clip-path="url(#clip0_251_380)">
 									<path
@@ -123,13 +111,7 @@ const ProjectManagement = () => {
 						</Button>
 					</div>
 				</div>
-				<Button
-					sx={{
-						outline: 'none !important',
-						textTransform: 'capitalize',
-					}}
-					variant="contained"
-				>
+				<Button className="!outline-none !bg-primary !capitalize !rounded-[10px] !text-white !py-4 !px-12 !text-lg">
 					New Project
 				</Button>
 			</div>

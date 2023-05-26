@@ -1,3 +1,19 @@
+:root {
+	--color-primary: #4285f4;
+	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+	--color-primary: #4285f4;
+	color-scheme: light dark;
+	color: rgba(255, 255, 255, 0.87);
+	background-color: #242424;
+
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
+}
 body {
 	margin: 0;
 	display: flex;
@@ -95,18 +111,9 @@ input[type='range'] {
 input[type='range']::-webkit-slider-thumb {
 	appearance: none !important;
 	border-radius: 0 25px 25px 0;
-	width: 10px;
+	width: 5px;
 	height: 8px;
 	background-color: var(--color-primary);
-	/* display: none; */
-}
-input[type='range']::-webkit-slider-thumb {
-	appearance: none !important;
-	border-radius: 0 25px 25px 0;
-	width: 10px;
-	height: 8px;
-	/* background-color: var(--color-primary); */
-	/* display: none; */
 }
 
 .volume-container > input[type='range'] {

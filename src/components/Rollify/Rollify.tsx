@@ -119,7 +119,7 @@ const Rollify = () => {
 		return valueRemove;
 	};
 
-	const handleRemoveMultiple = () => {
+	const handleRemoveMultiple = (): void => {
 		const compareTextHighlightArr = selectionsRemove.reduce((total, current) => {
 			const newValueRemove = handleRemove(current);
 			return [...total, ...newValueRemove];
@@ -139,11 +139,11 @@ const Rollify = () => {
 		setTypeMenu(EPopover.SELECT);
 	};
 
-	const handleOnClose = () => {
+	const handleOnClose = (): void => {
 		setOpenMenu(false);
 	};
 
-	const handleAddCorrect = () => {
+	const handleAddCorrect = (): void => {
 		selectionState.range.deleteContents();
 		const textNode = document.createTextNode(correctText);
 		selectionState.range.insertNode(textNode);
@@ -156,7 +156,7 @@ const Rollify = () => {
 		setSelectionState(null);
 	};
 
-	const handleRename = () => {
+	const handleRename = (): void => {
 		setOpenPopper(false);
 		setRenameState(true);
 	};
@@ -271,14 +271,8 @@ const Rollify = () => {
 							variant="contained"
 							type="button"
 							disabled={Boolean(!listData.length)}
+							className="outline-none mb-[30px] rounded-full normal-case w-[256px] max-w-[80%] bg-rimary"
 							sx={{
-								textTransform: 'none',
-								marginBottom: '30px',
-								borderRadius: '25px',
-								outline: 'none !important',
-								width: '256.26px',
-								maxWidth: '80%',
-								bgcolor: '#4285F4;',
 								'& .Mui-disabled': {
 									bgcolor: '#EAEAEA',
 									color: '#879BAC',
@@ -288,7 +282,6 @@ const Rollify = () => {
 							Add B-Roll
 						</Button>
 						{paragraphs && paragraphs.length > 0 ? (
-							// <div>
 							<ScrollView sx="flex flex-col gap-8 pr-[30px] scrollbar_custom scrollbar_small relative z-[2]">
 								{listData.map((paragraph, index) => (
 									<div key={index} className="flex flex-col gap-2 text-black">
@@ -298,7 +291,6 @@ const Rollify = () => {
 								))}
 							</ScrollView>
 						) : (
-							// </div>
 							<div className="w-full h-full flex items-center justify-center grow">
 								<svg width="66" height="41" viewBox="0 0 66 41" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<rect x="0.202515" y="4.4668" width="39.9559" height="5.85524" rx="2.92762" fill="#4285F4" />
@@ -312,7 +304,7 @@ const Rollify = () => {
 						)}
 					</div>
 				</div>
-				<div className="flex flex-col items-center gap-[83px] w-full xl:w-3/5 px-2 max-h-[calc(100vh-205px)] min-h-[calc(100vh-205px)]">
+				<div className="flex flex-col items-center justify-between gap-[60px] w-full xl:w-3/5 px-2 max-h-[calc(100vh-105px)] min-h-[calc(100vh-105px)]">
 					{renameState ? (
 						<div className="flex items-center gap-4">
 							<TextField
@@ -332,13 +324,7 @@ const Rollify = () => {
 						</div>
 					) : (
 						<Button
-							sx={{
-								maxWidth: '60%',
-								textTransform: 'none',
-								width: 'fit-content',
-								color: '#879BAC',
-								outline: 'none !important',
-							}}
+							className="max-w-[60%] normal-case w-fit text-[#879BAC] outline-none"
 							ref={btnPopper}
 							endIcon={<BsChevronDown color="black" />}
 							onClick={() => setOpenPopper(!openPopper)}
@@ -348,20 +334,13 @@ const Rollify = () => {
 					)}
 					<VideoControlCustom src={videoURL} />
 
-					<div className="flex items-center gap-8 justify-center mt-0 xl:mt-12">
+					<div className="flex items-center gap-8 justify-center">
 						<Button
 							variant="outlined"
 							type="button"
 							disabled={Boolean(!listData.length)}
+							className="text-primary border-primary normal-case mb-[30px] relative rounded-full outline-none py-3 px-[22px] w-32"
 							sx={{
-								textTransform: 'none',
-								marginBottom: '30px',
-								borderRadius: '25px',
-								height: '45px',
-								outline: 'none !important',
-								width: '121.79px',
-								color: '#4285F4',
-								borderColor: '#4285F4',
 								'& .Mui-disabled': {
 									bgcolor: '#EAEAEA',
 									color: '#879BAC',
@@ -375,15 +354,8 @@ const Rollify = () => {
 							type="button"
 							startIcon={<BsCloudDownload className="" />}
 							disabled={Boolean(!listData.length)}
+							className="bg-primary normal-case mb-[30px] relative rounded-full outline-none py-3 px-[22px] w-32"
 							sx={{
-								textTransform: 'none',
-								marginBottom: '30px',
-								position: 'relative',
-								borderRadius: '25px',
-								height: '45px',
-								outline: 'none !important',
-								width: '121.79px',
-								bgcolor: '#4285F4',
 								'& .Mui-disabled': {
 									bgcolor: '#EAEAEA',
 									color: '#879BAC',
@@ -407,7 +379,7 @@ const Rollify = () => {
 					</div>
 				</div>
 			</div>
-			<div className="w-full p-3 w-full xl:w-3/12 pl-2">
+			<div className="w-full p-3 xl:w-3/12 pl-2">
 				<div className="w-full px-2">
 					<h2 className="text-center text-black font-bold mb-3 text-2xl select-none">B-Roll</h2>
 					<div className="rounded-[18px] flex flex-col items-center bg-[#F8FAFF] max-h-[calc(100vh-205px)] min-h-[calc(100vh-205px)] py-3 pl-6 pr-1">
@@ -452,11 +424,9 @@ const Rollify = () => {
 			<Popper
 				open={openPopper}
 				anchorEl={btnPopper.current}
+				className="rounded-lg mt-5"
 				sx={{
 					boxShadow: '2px 2px 10px #000',
-					borderRadius: '8px',
-					position: 'relative',
-					marginTop: '20px',
 				}}
 				popperOptions={{
 					modifiers: [
@@ -472,25 +442,16 @@ const Rollify = () => {
 				<Box component="ul" sx={{ border: 1, p: 1, bgcolor: 'background.paper', borderRadius: '8px' }}>
 					<Box
 						component="div"
+						className="w-0 h-0 absolute -top-[10px] right-[15px]"
 						sx={{
-							width: 0,
-							height: 0,
 							borderLeft: '8px solid transparent',
 							borderRight: '8px solid transparent',
 							borderBottom: '15px solid white',
-							position: 'absolute',
-							top: '-10px',
-							right: '15px',
 						}}
 					></Box>
 					<Box component="li">
 						<Button
-							sx={{
-								textTransform: 'none',
-								outline: 'none !important',
-								marginBottom: '8px',
-								color: '#000',
-							}}
+							className="normal-case outline-none mb-2 text-black"
 							startIcon={<img src={Folder} draggable={false} loading="lazy" />}
 							onClick={handleRename}
 						>
@@ -499,12 +460,7 @@ const Rollify = () => {
 					</Box>
 					<Box component="li">
 						<Button
-							sx={{
-								textTransform: 'none',
-								outline: 'none !important',
-								marginBottom: '8px',
-								color: '#000',
-							}}
+							className="normal-case outline-none mb-2 text-black"
 							startIcon={<img src={Trash} draggable={false} loading="lazy" />}
 						>
 							Delete
@@ -560,22 +516,7 @@ const Rollify = () => {
 					>
 						<Box
 							component="span"
-							sx={{
-								position: 'absolute',
-								height: '20px',
-								width: '20px',
-								backgroundColor: 'red',
-								borderRadius: '50%',
-								color: 'white',
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'center',
-								padding: '5px',
-								overflow: 'hidden',
-								cursor: 'pointer',
-								top: '-2px',
-								right: '2px',
-							}}
+							className="absolute h-5 w-5 bg-red-600 -top-[2px] -right-[2px] text-white rounded-[50%] flex items-center justify-center p-1 overflow-hidden cursor-pointer"
 							onClick={handleOnClose}
 						>
 							close
