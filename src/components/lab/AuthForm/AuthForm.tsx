@@ -3,11 +3,13 @@ import Logo from '@/assets/imgs/icons/logo.svg';
 import { EForms } from '@/constants/form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Backdrop, Button, Theme } from '@mui/material';
-import { GoogleLogin } from '@react-oauth/google';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { FaRegTimesCircle } from 'react-icons/fa';
+import { FaFacebookF, FaRegTimesCircle } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
+
+import { IResolveParams, LoginSocialFacebook, LoginSocialGoogle } from 'reactjs-social-login';
 import * as yup from 'yup';
 import FormControlCustom from '../FormControlCustom/FormControlCustom';
 import TextFieldCustom from '../TextField/TextFieldCustom';
@@ -102,19 +104,53 @@ const AuthForm = () => {
 							<FaRegTimesCircle color="black" size={32} />
 						</span>
 					</div>
-					<div className="w-full border-b border-[#DAE8FD] pb-6 relative mb-12 mt-14">
+					<div className="w-full border-b border-[#DAE8FD] pb-9 relative mb-12 mt-14">
 						<h2 className="text-center w-full font-normal text-xl capitalize">
 							{authFormType === EForms.SIGNIN ? 'Sign in' : 'Create your account'}
 						</h2>
+						<div className="w-full flex gap-7 mt-7">
+							<LoginSocialGoogle
+								className="flex w-1/2 "
+								isOnlyGetToken
+								client_id={import.meta.env.VITE_CLIENT_ID || ''}
+								onResolve={({ provider, data }: IResolveParams) => {
+									console.log('🚀 ~ file: AuthForm.tsx:245 ~ AuthForm ~ data:', data);
+									console.log('🚀 ~ file: AuthForm.tsx:245 ~ AuthForm ~ provider:', provider);
+								}}
+								onReject={(err: any) => {
+									console.log(err);
+								}}
+							>
+								<Button
+									variant="contained"
+									className="m-0 w-full bg-white shadow-md outline-none text-black px-3 py-6 rounded-[10px] normal-case text-sm"
+									startIcon={<FcGoogle style={{ marginRight: '24px' }} size={23} color="#0054DF" />}
+								>
+									Continue with Facebook
+								</Button>
+							</LoginSocialGoogle>
 
-						<GoogleLogin
-							onSuccess={(credentialResponse) => {
-								console.log(credentialResponse);
-							}}
-							onError={() => {
-								console.log('Login Failed');
-							}}
-						/>
+							<LoginSocialFacebook
+								className="flex w-1/2"
+								// isOnlyGetToken
+								appId={import.meta.env.VITE_FACEBOOK_ID || ''}
+								onResolve={({ provider, data }: IResolveParams) => {
+									console.log('🚀 ~ file: AuthForm.tsx:245 ~ AuthForm ~ data:', data);
+									console.log('🚀 ~ file: AuthForm.tsx:245 ~ AuthForm ~ provider:', provider);
+								}}
+								onReject={(err: any) => {
+									console.log('🚀 ~ file: AuthForm.tsx:135 ~ AuthForm ~ err:', err);
+								}}
+							>
+								<Button
+									variant="contained"
+									className="m-0 w-full bg-white shadow-md outline-none text-black px-3 py-6 rounded-[10px] normal-case text-sm"
+									startIcon={<FaFacebookF style={{ marginRight: '16px' }} size={23} color="#0054DF" />}
+								>
+									Continue with Facebook
+								</Button>
+							</LoginSocialFacebook>
+						</div>
 						<p className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-2 h-4 bg-white">Or</p>
 					</div>
 					<div className="flex flex-col gap-6 text-black">

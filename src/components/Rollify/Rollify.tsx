@@ -3,6 +3,7 @@ import Trash from '@/assets/imgs/icons/trash.svg';
 import videoURL from '@/assets/videos/video.mp4';
 import { ScrollView, VideoControlCustom } from '@/components';
 import { EPopover } from '@/constants/types';
+import { getParentElement } from '@/utils/commonFunctions';
 import { useTextSelection } from '@/utils/customHooks';
 import { Box, Button, Menu, MenuItem, Popper, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
@@ -121,7 +122,8 @@ const Rollify = () => {
 
 	const handleRemoveMultiple = (): void => {
 		const compareTextHighlightArr = selectionsRemove.reduce((total, current) => {
-			const newValueRemove = handleRemove(current);
+			const parentEl = getParentElement(current, 'select-none');
+			const newValueRemove = handleRemove(parentEl);
 			return [...total, ...newValueRemove];
 		}, []);
 		const newTextHighlight = textSelectionStore.map((txt, index) => {
@@ -175,7 +177,7 @@ const Rollify = () => {
 				const temp = selectionText;
 				const extractContents = range.extractContents();
 				const newSpanElement = document.createElement('span');
-				newSpanElement.classList.add('text-blue-300', 'select-none');
+				newSpanElement.classList.add('text-blue-300', 'select-none', 'cursor-pointer');
 				newSpanElement.setAttribute('data-selection', selectionText);
 				newSpanElement.setAttribute('data-index', `${index}`);
 				newSpanElement.addEventListener('click', handleNewSpanClick);
@@ -215,14 +217,26 @@ const Rollify = () => {
 
 	useEffect(() => {
 		const handleToggleSelection = (e: Event) => {
+			e.stopPropagation();
 			menuElRef.current = e.target as HTMLElement;
+			const finalEl = getParentElement(menuElRef.current, 'select-none');
+			const childrenList = finalEl.querySelectorAll('span');
 
 			setSelectionsRemove((pre) => {
 				if ([...pre].includes(e.target)) {
 					(e.target as Element)?.classList.remove('bg-blue-300', 'text-white', 'rounded-md');
+					if (childrenList.length) {
+						// if there are children in the list removed them with the parent respectively
+						childrenList.forEach((ele) => ele.classList.remove('bg-blue-300', 'text-white', 'rounded-md'));
+					}
 					setTypeMenu(EPopover.SELECT);
-					return [...pre].filter((ele) => ele !== e.target);
+					return [...pre].filter((ele) => ele !== e.target && ![...childrenList].includes(ele));
 				} else {
+					if ([...pre].includes(finalEl)) {
+						// if user click on children but that parent already selected then unselect the parent
+						finalEl?.classList.remove('bg-blue-300', 'text-white', 'rounded-md');
+						return [...pre].filter((ele) => ele !== finalEl);
+					}
 					(e.target as Element)?.classList.add('bg-blue-300', 'text-white', 'rounded-md');
 					setTypeMenu(EPopover.DELETE);
 					setOpenMenu(true);
