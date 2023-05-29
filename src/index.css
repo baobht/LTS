@@ -252,6 +252,17 @@ span.bg-blue-300.select-none span {
 	}
 }
 
+input[type='number'].otp_input::-webkit-inner-spin-button,
+input[type='number'].otp_input::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	-moz-appearance: none !important;
+	margin: 0;
+}
+
+.otp_container.otp_error > input[type='number'].otp_input {
+	border-color: red !important;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

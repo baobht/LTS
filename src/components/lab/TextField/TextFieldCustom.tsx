@@ -40,14 +40,18 @@ const TextFieldCustom = (props: ITextFieldLabel) => {
 					type={type}
 					error={error}
 					variant="outlined"
-					value={field.value}
+					value={field.value ?? ''}
 					helperText={errorMessage}
 					placeholder={placeholder}
 					className={classCustom}
-					inputProps={{
-						...(type === 'number' && { min: 0 }),
+					autoComplete=""
+					InputProps={{
 						...inputProps,
 					}}
+					// inputProps={{
+					// 	...(type === 'number' && { min: 0 }),
+					// 	...inputProps,
+					// }}
 					{...rest}
 				/>
 			)}
